@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Taxi Ride Booking</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Taxi Ride Booking</h1>
+    
+    <!-- Mode Selection -->
+    <div class="mode-select">
+      <label>
+        <input type="radio" name="mode" value="customer" checked>
+        Customer Input
+      </label>
+      <label>
+        <input type="radio" name="mode" value="driver">
+        Driver Assigning
+      </label>
+    </div>
+    
+    <!-- Customer Input Section -->
+    <div id="customerFormSection">
+      <h2>Customer Input</h2>
+      <form id="rideForm">
+        <label for="customer_name">Customer Name:</label>
+        <input type="text" id="customer_name" name="customer_name" required>
+        
+        <label for="customer_number">Customer Number:</label>
+        <input type="text" id="customer_number" name="customer_number" required>
+        
+        <label for="pickup_location">Pickup Location:</label>
+        <input type="text" id="pickup_location" name="pickup_location" required>
+        
+        <label for="drop_location">Drop Location:</label>
+        <input type="text" id="drop_location" name="drop_location" required>
+        
+        <label>Vehicle Type:</label>
+        <div class="radio-group">
+          <label><input type="radio" name="ride_vehicle_type" value="Auto" required> Auto</label>
+          <label><input type="radio" name="ride_vehicle_type" value="Micro"> Micro</label>
+          <label><input type="radio" name="ride_vehicle_type" value="Sedan"> Sedan</label>
+          <label><input type="radio" name="ride_vehicle_type" value="Xylo/Tavera"> Xylo/Tavera</label>
+          <label><input type="radio" name="ride_vehicle_type" value="Innova"> Innova</label>
+          <label><input type="radio" name="ride_vehicle_type" value="Innova crysta"> Innova crysta</label>
+        </div>
+        
+        <label for="num_passengers">Number of Passengers:</label>
+        <input type="number" id="num_passengers" name="num_passengers" required>
+        
+        <label for="journey_on">Journey On:</label>
+        <input type="date" id="journey_on" name="journey_on" required>
+        
+        <label for="pickup_time">Pickup Time:</label>
+        <!-- Clock input for pickup time -->
+        <input type="time" id="pickup_time" name="pickup_time" required>
+        
+        <label>Journey Type:</label>
+        <div class="radio-group" id="journeyTypeGroup">
+          <label><input type="radio" name="journey_type" value="1 way" required> 1 way</label>
+          <label><input type="radio" name="journey_type" value="2 way"> 2 way</label>
+        </div>
+        
+        <!-- Drop Off Section (Only visible for 2 way trips) -->
+        <div id="returnSection" style="display:none;">
+          <label for="return_date">Drop Off Date:</label>
+          <input type="date" id="return_date" name="return_date">
+          
+          <label for="return_time">Drop Off Time:</label>
+          <input type="time" id="return_time" name="return_time">
+        </div>
+        
+        <label for="estimated_km">Estimated KM:</label>
+        <input type="text" id="estimated_km" name="estimated_km">
+        
+        <label for="estimated_price">Estimated Fare (₹):</label>
+        <input type="text" id="estimated_price" name="estimated_price">
+        
+        <button type="submit">Save Ride</button>
+      </form>
+      <div id="response"></div>
+    </div>
+    
+    <!-- Driver Assigning Section -->
+    <div id="driverFormSection" style="display:none;">
+      <h2>Driver Assigning</h2>
+      <!-- Retrieve Customer Details -->
+      <div class="retrieve-section">
+        <label for="search_customer_number">Customer Mobile Number:</label>
+        <input type="text" id="search_customer_number" name="search_customer_number" required>
+        <button type="button" id="retrieveCustomerBtn">Retrieve Customer</button>
+      </div>
+      <div id="customerDetails" class="info-box"></div>
+      <div id="rideDetails" class="info-box"></div>
+      
+      <!-- Driver Details Input -->
+      <div id="driverDetailsSection">
+        <h3>Driver Details</h3>
+        <div class="retrieve-section">
+          <label for="driver_number">Driver Number:</label>
+          <input type="text" id="driver_number" name="driver_number" required>
+          <button type="button" id="retrieveDriverBtn">Retrieve Driver</button>
+        </div>
+        <label for="driver_name">Driver Name:</label>
+        <input type="text" id="driver_name" name="driver_name">
+        
+        <label for="vehicle_number">Vehicle Number:</label>
+        <input type="text" id="vehicle_number" name="vehicle_number">
+        
+        <label for="vehicle_type">Vehicle Type:</label>
+        <input type="text" id="vehicle_type" name="vehicle_type">
+        
+        <!-- Book Now button always visible -->
+        <button type="button" id="bookNowBtn">Book Now</button>
+      </div>
+      <div id="driverResponse" class="info-box"></div>
+    </div>
+    
+    <button id="viewRidesBtn">View All Rides</button>
+    <div id="ridesList"></div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
