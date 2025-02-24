@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Container is centered and wider -->
+  <!-- Centered, wider container -->
   <div class="container">
     <h1>Taxi Ride Booking</h1>
     
@@ -25,25 +25,25 @@
     <!-- Customer Input Section -->
     <div id="customerFormSection">
       <h2>Customer Input</h2>
-      <!-- Flex container with two columns: form (left) and template (right) -->
+      <!-- Two-column layout: form (left), Template 1 (right) -->
       <div class="flex-container">
         <div class="form-column">
           <form id="rideForm">
-            <!-- Pickup & Drop first -->
+            <!-- Pickup & Drop -->
             <label for="pickup_location">Pickup Location:</label>
             <input type="text" id="pickup_location" name="pickup_location" required>
             
             <label for="drop_location">Drop Location:</label>
             <input type="text" id="drop_location" name="drop_location" required>
             
-            <!-- Then Customer Name & Number -->
+            <!-- Customer Name & Number -->
             <label for="customer_name">Customer Name:</label>
             <input type="text" id="customer_name" name="customer_name" required>
             
             <label for="customer_number">Customer Number:</label>
             <input type="text" id="customer_number" name="customer_number" required>
             
-            <!-- Updated Vehicle Type Options -->
+            <!-- Vehicle Type Options -->
             <label for="ride_vehicle_type">Vehicle Type:</label>
             <div class="radio-group">
               <label><input type="radio" name="ride_vehicle_type" value="Auto" required> Auto</label>
@@ -75,7 +75,7 @@
               <label><input type="radio" name="journey_type" value="2 way"> 2 way</label>
             </div>
             
-            <!-- Drop Off Section (only for 2 way trips) -->
+            <!-- Drop Off Section (Only for 2 way trips) -->
             <div id="returnSection" style="display:none;">
               <label for="return_date">Drop Off Date:</label>
               <input type="date" id="return_date" name="return_date">
@@ -94,11 +94,10 @@
           </form>
           <div id="response"></div>
         </div>
-        <!-- Template Column -->
+        <!-- Template 1 Column -->
         <div class="template-column">
-          <h3>Ride Template</h3>
-          <textarea id="tamilMessage" rows="8" style="width:100%;"></textarea>
-          <button type="button" id="copyMessageBtn">Copy to Clipboard</button>
+          <h3>Ride Template (Template 1)</h3>
+          <textarea id="template1" rows="15" style="width:100%;"></textarea>
         </div>
       </div>
     </div>
@@ -106,7 +105,7 @@
     <!-- Driver Assigning Section -->
     <div id="driverFormSection" style="display:none;">
       <h2>Driver Assigning</h2>
-      <!-- Retrieve Customer Details -->
+      <!-- Retrieve Customer Row -->
       <div class="retrieve-section">
         <label for="search_customer_number">Customer Mobile Number:</label>
         <input type="text" id="search_customer_number" name="search_customer_number" required>
@@ -115,33 +114,43 @@
       <div id="customerDetails" class="info-box"></div>
       <div id="rideDetails" class="info-box"></div>
       
-      <!-- Driver Details Input -->
-      <div id="driverDetailsSection">
-        <h3>Driver Details</h3>
-        <div class="retrieve-section">
-          <label for="driver_number">Driver Number:</label>
-          <input type="text" id="driver_number" name="driver_number" required>
-          <button type="button" id="retrieveDriverBtn">Retrieve Driver</button>
+      <!-- Two-column layout: Driver form (left), Templates 2 & 3 (right) -->
+      <div class="flex-container">
+        <div class="form-column">
+          <h3>Driver Details</h3>
+          <div class="retrieve-section">
+            <label for="driver_number">Driver Number:</label>
+            <input type="text" id="driver_number" name="driver_number" required>
+            <button type="button" id="retrieveDriverBtn">Retrieve Driver</button>
+          </div>
+          <div class="driver-detail">
+            <label for="driver_name">Driver Name:</label>
+            <input type="text" id="driver_name" name="driver_name">
+          </div>
+          <div class="driver-detail">
+            <label for="vehicle_number">Vehicle Number:</label>
+            <input type="text" id="vehicle_number" name="vehicle_number">
+          </div>
+          <div class="driver-detail">
+            <label for="vehicle_type">Vehicle Type:</label>
+            <input type="text" id="vehicle_type" name="vehicle_type">
+          </div>
+          <button type="button" id="bookNowBtn">Book Now</button>
+          <div id="driverResponse" class="info-box"></div>
         </div>
-        <div class="driver-detail">
-          <label for="driver_name">Driver Name:</label>
-          <input type="text" id="driver_name" name="driver_name">
+        <!-- Templates Column for Driver Assignment -->
+        <div class="template-column">
+          <h3>Booking Templates</h3>
+          <label>Template 2:</label>
+          <textarea id="template2" rows="10" style="width:100%;"></textarea>
+          <label style="margin-top:10px;">Template 3:</label>
+          <textarea id="template3" rows="12" style="width:100%; margin-top:5px;"></textarea>
         </div>
-        <div class="driver-detail">
-          <label for="vehicle_number">Vehicle Number:</label>
-          <input type="text" id="vehicle_number" name="vehicle_number">
-        </div>
-        <div class="driver-detail">
-          <label for="vehicle_type">Vehicle Type:</label>
-          <input type="text" id="vehicle_type" name="vehicle_type">
-        </div>
-        <button type="button" id="bookNowBtn">Book Now</button>
       </div>
-      <div id="driverResponse" class="info-box"></div>
+      
+      <button id="viewRidesBtn" style="margin-top:20px;">View All Rides</button>
+      <div id="ridesList"></div>
     </div>
-    
-    <button id="viewRidesBtn">View All Rides</button>
-    <div id="ridesList"></div>
   </div>
   
   <script src="script.js"></script>

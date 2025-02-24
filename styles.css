@@ -5,10 +5,10 @@ body {
   padding: 0;
 }
 
-/* Container centered and wider */
+/* Centered, wider container */
 .container {
   max-width: 1000px;
-  margin: 30px auto; /* center horizontally */
+  margin: 30px auto; /* Center horizontally */
   background: #fff;
   padding: 20px 30px;
   border-radius: 5px;
@@ -44,17 +44,18 @@ input[type="text"],
 input[type="number"],
 input[type="date"],
 input[type="time"] {
-  padding: 8px;
+  padding: 6px;  /* Reduced padding */
   margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 3px;
+  text-transform: capitalize; /* Capitalize first letter */
 }
 
 .radio-group {
   margin-top: 5px;
 }
 
-/* Flex container for form and template columns */
+/* Flex container for two columns */
 .flex-container {
   display: flex;
   gap: 20px;
@@ -97,6 +98,8 @@ input[type="time"] {
 .retrieve-section input {
   flex: 1;
   margin-right: 10px;
+  padding: 6px; /* Reduced padding */
+  text-transform: capitalize;
 }
 
 /* Driver detail fields on separate lines */
@@ -119,6 +122,7 @@ button:hover {
   background-color: #0056b3;
 }
 
+/* Info box styling */
 .info-box {
   margin-top: 15px;
   padding: 10px;

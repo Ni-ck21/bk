@@ -19,8 +19,8 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     $customer = $result->fetch_assoc();
-    // Get latest ride details
-    $sqlRide = "SELECT estimated_price, estimated_km FROM ride_details WHERE customer_number='$customer_number' ORDER BY created_at DESC LIMIT 1";
+    // Updated query: include additional ride details for templates
+    $sqlRide = "SELECT estimated_price, estimated_km, pickup_location, drop_location, journey_on, pickup_time, journey_type FROM ride_details WHERE customer_number='$customer_number' ORDER BY created_at DESC LIMIT 1";
     $rideResult = $conn->query($sqlRide);
     if ($rideResult && $rideResult->num_rows > 0) {
         $ride = $rideResult->fetch_assoc();
