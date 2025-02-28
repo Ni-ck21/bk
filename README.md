@@ -10,9 +10,8 @@ CREATE TABLE customer_details (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
 CREATE TABLE driver_details (
-    driver_id VARCHAR(11) NOT NULL,
+    driver_id VARCHAR(11) DEFAULT NULL,
     driver_name VARCHAR(100) NOT NULL,
     driver_number VARCHAR(15) UNIQUE NOT NULL,
     vehicle_number VARCHAR(50),
@@ -22,7 +21,6 @@ CREATE TABLE driver_details (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (driver_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 
 CREATE TABLE ride_details (
     ride_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -45,3 +43,20 @@ CREATE TABLE ride_details (
     FOREIGN KEY (customer_number) REFERENCES customer_details(customer_number),
     FOREIGN KEY (driver_id) REFERENCES driver_details(driver_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DELIMITER $$
+CREATE TRIGGER before_driver_insert
+BEFORE INSERT ON driver_details
+FOR EACH ROW
+BEGIN
+    IF NEW.driver_id IS NULL OR NEW.driver_id = '' THEN
+        DECLARE maxId INT DEFAULT 0;
+        -- Get the maximum numeric part from existing driver_ids (skipping the initial 'D')
+        SELECT IFNULL(MAX(CAST(SUBSTRING(driver_id, 2) AS UNSIGNED)), 0)
+          INTO maxId
+          FROM driver_details;
+        SET maxId = maxId + 1;
+        SET NEW.driver_id = CONCAT('D', LPAD(maxId, 3, '0'));
+    END IF;
+END$$
+DELIMITER ;
