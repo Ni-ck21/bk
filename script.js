@@ -169,21 +169,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Retrieve Driver
+  // Retrieve Driver using driver_id instead of driver_number
   const retrieveDriverBtn = document.getElementById('retrieveDriverBtn');
   if (retrieveDriverBtn) {
     retrieveDriverBtn.addEventListener('click', function() {
-      const driverNumber = document.getElementById('driver_number')?.value.trim() || "";
-      if (driverNumber !== "") {
-        fetch('get_driver.php?driver_number=' + driverNumber)
+      // Fetch driver details using the driver_id input field
+      const driverId = document.getElementById('driver_id')?.value.trim() || "";
+      if (driverId !== "") {
+        fetch('get_driver.php?driver_id=' + driverId)
           .then(response => response.json())
           .then(data => {
             if (data.status === 'success') {
               const driver = data.driver;
+              document.getElementById('driver_number').value = capitalizeFirst(driver.driver_number);
               document.getElementById('driver_name').value = capitalizeFirst(driver.driver_name);
               document.getElementById('vehicle_number').value = capitalizeFirst(driver.vehicle_number);
               document.getElementById('vehicle_type').value = capitalizeFirst(driver.vehicle_type);
             } else {
+              document.getElementById('driver_name').value = "";
               document.getElementById('driver_name').value = "";
               document.getElementById('vehicle_number').value = "";
               document.getElementById('vehicle_type').value = "";
@@ -196,12 +199,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Book Now: assign driver and generate Template 2 & Template 3
+  // Book Now: assign driver and generate Template 2 & Template 3 using driver_id
   const bookNowBtn = document.getElementById('bookNowBtn');
   if (bookNowBtn) {
     bookNowBtn.addEventListener('click', function() {
       const customerNumber = document.getElementById('search_customer_number')?.value.trim() || "";
-      const driverNumber = document.getElementById('driver_number')?.value.trim() || "";
+      // Use driver_id instead of driver_number
+      const driverId = document.getElementById('driver_id')?.value.trim() || "";
       const driverName = capitalizeFirst(document.getElementById('driver_name')?.value.trim() || "");
       const vehicleNumber = capitalizeFirst(document.getElementById('vehicle_number')?.value.trim() || "");
       const vehicleType = capitalizeFirst(document.getElementById('vehicle_type')?.value.trim() || "");
@@ -209,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Prepare parameters for book_now.php
       const params = new URLSearchParams();
       params.append('customer_number', customerNumber);
-      params.append('driver_number', driverNumber);
+      params.append('driver_id', driverId);
       params.append('driver_name', driverName);
       params.append('vehicle_number', vehicleNumber);
       params.append('vehicle_type', vehicleType);
@@ -238,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const rideJourneyType = rideData.journey_type || "1 way";
         const tamilJourneyType = (rideJourneyType === "2 way") ? "இரு வழி" : "ஒரு வழி";
 
-        // Template 2: For the driver (using the new text)
+        // Template 2: For the driver
         let template2 = `*வணக்கம் ${driverName}*\n\n` +
                         `உங்கள் வரவிருக்கும் Cabocab பயணம் உறுதியாக்கப்பட்டுள்ளது!  வாடிக்கையாளர் விவரங்களை கீழே காணலாம்:\n\n` +
                         `*வாடிக்கையாளர் தகவல்:*\n` +
@@ -262,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         `உங்கள் *Cabocab* பயணம் உறுதியாக்கப்பட்டுள்ளது!\n\n` +
                         `பயண விவரங்கள்:\n\n` +
                         `- ஓட்டுநர் பெயர்: ${driverName}\n` +
-                        `- ஓட்டுநர் தொடர்பு எண்: ${driverNumber}\n` +
+                        `- ஓட்டுநர் தொடர்பு எண்: ${driverId}\n` +
                         `- வாகன எண்: ${vehicleNumber}\n` +
                         `- வாகன வகை: ${vehicleType}\n` +
                         `- பிக்கப் இடம்: ${pickup}\n` +

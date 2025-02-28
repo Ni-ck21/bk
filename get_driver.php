@@ -13,8 +13,8 @@ if ($conn->connect_error) {
     exit;
 }
 
-$driver_number = $conn->real_escape_string($_GET['driver_number']);
-$sql = "SELECT * FROM driver_details WHERE driver_number='$driver_number'";
+$driver_id = $conn->real_escape_string($_GET['driver_id']);
+$sql = "SELECT * FROM driver_details WHERE driver_id='$driver_id'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
