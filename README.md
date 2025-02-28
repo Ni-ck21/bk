@@ -1,4 +1,3 @@
--- 1) Create customer_details table (unchanged)
 CREATE TABLE customer_details (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_name VARCHAR(100) NOT NULL,
@@ -11,7 +10,7 @@ CREATE TABLE customer_details (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 2) Create driver_details table with driver_id as VARCHAR(11)
+
 CREATE TABLE driver_details (
     driver_id VARCHAR(11) NOT NULL,
     driver_name VARCHAR(100) NOT NULL,
@@ -24,7 +23,7 @@ CREATE TABLE driver_details (
     PRIMARY KEY (driver_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 3) Create ride_details table with driver_id as VARCHAR(11)
+
 CREATE TABLE ride_details (
     ride_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_number VARCHAR(15) NOT NULL,
