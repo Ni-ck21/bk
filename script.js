@@ -3,6 +3,27 @@ function capitalizeFirst(str) {
   return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 }
 
+// New helper function to convert date from yyyy-mm-dd to dd-mm-yyyy
+function convertDate(dateStr) {
+  if (!dateStr) return "";
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  return parts[2] + '-' + parts[1] + '-' + parts[0];
+}
+
+// New helper function to convert time from 24-hour to 12-hour format with AM/PM
+function convertTime(timeStr) {
+  if (!timeStr) return "";
+  const parts = timeStr.split(':');
+  if (parts.length < 2) return timeStr;
+  let hours = parseInt(parts[0], 10);
+  const minutes = parts[1];
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  if (hours === 0) hours = 12;
+  return hours + ':' + minutes + ' ' + ampm;
+}
+
 // Global variables to store retrieved customer and ride data
 let customerData = {};
 let rideData = {};
@@ -48,12 +69,15 @@ document.addEventListener('DOMContentLoaded', function() {
       const estimatedFare = document.getElementById('estimated_price')?.value || "";
       const journeyTypeEl = document.querySelector('input[name="journey_type"]:checked');
       const journeyType = journeyTypeEl ? journeyTypeEl.value : "1 way";
+      // Get the date and time values
       const journeyOn = document.getElementById('journey_on')?.value || "";
       const pickupTime = document.getElementById('pickup_time')?.value || "";
+      // Convert date and time to desired formats
+      const formattedDate = convertDate(journeyOn);
+      const formattedTime = convertTime(pickupTime);
+      const tripDateTime = formattedDate + " " + formattedTime;
 
       const tamilJourneyType = (journeyType === '2 way') ? 'இரு வழி' : 'ஒரு வழி';
-      const tripDateTime = journeyOn + " " + pickupTime;
-
       const template1 = `எங்கள் கேபோகேப் மூலம் உங்கள் பயணத்தை எடுத்து செல்லுங்கள்\n\n` +
                         `*பிக்‌அப் இடம்: ${pickup}\n` +
                         `*சேருமிடம் : ${drop}\n` +
@@ -113,11 +137,14 @@ document.addEventListener('DOMContentLoaded', function() {
               }
               if (rideDetailsDiv) {
                 if (rideData.pickup_location) {
+                  // Convert ride date and time using our helper functions if available
+                  const rideDate = convertDate(rideData.journey_on || "");
+                  const rideTime = convertTime(rideData.pickup_time || "");
+                  const rideTripDateTime = rideDate + " " + rideTime;
                   rideDetailsDiv.innerHTML = `
                     <p><strong>Pickup Location:</strong> ${rideData.pickup_location}</p>
                     <p><strong>Drop Location:</strong> ${rideData.drop_location}</p>
-                    <p><strong>Journey On:</strong> ${rideData.journey_on}</p>
-                    <p><strong>Pickup Time:</strong> ${rideData.pickup_time}</p>
+                    <p><strong>Journey On:</strong> ${rideTripDateTime}</p>
                     <p><strong>Estimated KM:</strong> ${rideData.estimated_km}</p>
                     <p><strong>Estimated Fare:</strong> ₹${rideData.estimated_price}</p>
                   `;
@@ -200,13 +227,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const customerName = capitalizeFirst(customerData.customer_name || "");
         const pickup = capitalizeFirst(rideData.pickup_location || "");
         const drop = capitalizeFirst(rideData.drop_location || "");
+        // Convert date and time from rideData if available
         const journeyOn = rideData.journey_on || "";
         const pickupTime = rideData.pickup_time || "";
+        const formattedDate = convertDate(journeyOn);
+        const formattedTime = convertTime(pickupTime);
+        const tripDateTime = (formattedDate + " " + formattedTime).trim();
         const estimatedKm = rideData.estimated_km || "";
         const estimatedFare = rideData.estimated_price || "";
         const rideJourneyType = rideData.journey_type || "1 way";
         const tamilJourneyType = (rideJourneyType === "2 way") ? "இரு வழி" : "ஒரு வழி";
-        const tripDateTime = (journeyOn + " " + pickupTime).trim();
 
         // Template 2: For the driver (using the new text)
         let template2 = `*வணக்கம் ${driverName}*\n\n` +
