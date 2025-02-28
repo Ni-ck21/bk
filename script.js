@@ -3,7 +3,7 @@ function capitalizeFirst(str) {
   return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 }
 
-// New helper function to convert date from yyyy-mm-dd to dd-mm-yyyy
+// Helper function to convert date from yyyy-mm-dd to dd-mm-yyyy
 function convertDate(dateStr) {
   if (!dateStr) return "";
   const parts = dateStr.split('-');
@@ -11,7 +11,7 @@ function convertDate(dateStr) {
   return parts[2] + '-' + parts[1] + '-' + parts[0];
 }
 
-// New helper function to convert time from 24-hour to 12-hour format with AM/PM
+// Helper function to convert time from 24-hour to 12-hour format with AM/PM
 function convertTime(timeStr) {
   if (!timeStr) return "";
   const parts = timeStr.split(':');
@@ -69,15 +69,13 @@ document.addEventListener('DOMContentLoaded', function() {
       const estimatedFare = document.getElementById('estimated_price')?.value || "";
       const journeyTypeEl = document.querySelector('input[name="journey_type"]:checked');
       const journeyType = journeyTypeEl ? journeyTypeEl.value : "1 way";
-      // Get the date and time values
       const journeyOn = document.getElementById('journey_on')?.value || "";
       const pickupTime = document.getElementById('pickup_time')?.value || "";
-      // Convert date and time to desired formats
       const formattedDate = convertDate(journeyOn);
       const formattedTime = convertTime(pickupTime);
       const tripDateTime = formattedDate + " " + formattedTime;
-
       const tamilJourneyType = (journeyType === '2 way') ? 'இரு வழி' : 'ஒரு வழி';
+      
       const template1 = `எங்கள் கேபோகேப் மூலம் உங்கள் பயணத்தை எடுத்து செல்லுங்கள்\n\n` +
                         `*பிக்‌அப் இடம்: ${pickup}\n` +
                         `*சேருமிடம் : ${drop}\n` +
@@ -87,11 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         `*பயண தேதி & நேரம்: ${tripDateTime}\n\n` +
                         `நீங்கள் பயணத்தை எடுக்க விரும்பினால், இந்த எண்ணிற்கு வாட்ஸ்அப்பில் தனிப்பட்ட செய்தி அனுப்பவும்: 9487514688\n` +
                         `அல்லது பயணம் உறுதிப்படுத்த இந்த எண்ணிற்கு அழைக்கவும் **`;
-
+      
       const template1El = document.getElementById('template1');
       if (template1El) template1El.value = template1;
-
-      // Send form data to save_ride.php
+      
       let formData = new FormData(this);
       fetch('save_ride.php', {
         method: 'POST',
@@ -137,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
               }
               if (rideDetailsDiv) {
                 if (rideData.pickup_location) {
-                  // Convert ride date and time using our helper functions if available
                   const rideDate = convertDate(rideData.journey_on || "");
                   const rideTime = convertTime(rideData.pickup_time || "");
                   const rideTripDateTime = rideDate + " " + rideTime;
@@ -169,11 +165,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Retrieve Driver using driver_id instead of driver_number
+  // Retrieve Driver using driver_id
   const retrieveDriverBtn = document.getElementById('retrieveDriverBtn');
   if (retrieveDriverBtn) {
     retrieveDriverBtn.addEventListener('click', function() {
-      // Fetch driver details using the driver_id input field
       const driverId = document.getElementById('driver_id')?.value.trim() || "";
       if (driverId !== "") {
         fetch('get_driver.php?driver_id=' + driverId)
@@ -186,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
               document.getElementById('vehicle_number').value = capitalizeFirst(driver.vehicle_number);
               document.getElementById('vehicle_type').value = capitalizeFirst(driver.vehicle_type);
             } else {
-              document.getElementById('driver_name').value = "";
+              document.getElementById('driver_number').value = "";
               document.getElementById('driver_name').value = "";
               document.getElementById('vehicle_number').value = "";
               document.getElementById('vehicle_type').value = "";
@@ -199,25 +194,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Book Now: assign driver and generate Template 2 & Template 3 using driver_id
+  // Book Now: assign driver and generate booking templates
   const bookNowBtn = document.getElementById('bookNowBtn');
   if (bookNowBtn) {
     bookNowBtn.addEventListener('click', function() {
       const customerNumber = document.getElementById('search_customer_number')?.value.trim() || "";
-      // Use driver_id instead of driver_number
       const driverId = document.getElementById('driver_id')?.value.trim() || "";
       const driverName = capitalizeFirst(document.getElementById('driver_name')?.value.trim() || "");
+      const driverNumber = capitalizeFirst(document.getElementById('driver_number')?.value.trim() || "");
       const vehicleNumber = capitalizeFirst(document.getElementById('vehicle_number')?.value.trim() || "");
       const vehicleType = capitalizeFirst(document.getElementById('vehicle_type')?.value.trim() || "");
-
-      // Prepare parameters for book_now.php
+      
       const params = new URLSearchParams();
       params.append('customer_number', customerNumber);
       params.append('driver_id', driverId);
       params.append('driver_name', driverName);
+      params.append('driver_number', driverNumber);
       params.append('vehicle_number', vehicleNumber);
       params.append('vehicle_type', vehicleType);
-
+      
       fetch('book_now.php', {
         method: 'POST',
         body: params
@@ -226,12 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(data => {
         const driverResponseEl = document.getElementById('driverResponse');
         if (driverResponseEl) driverResponseEl.innerHTML = data;
-
-        // Retrieve ride and customer values for template generation
+        
         const customerName = capitalizeFirst(customerData.customer_name || "");
         const pickup = capitalizeFirst(rideData.pickup_location || "");
         const drop = capitalizeFirst(rideData.drop_location || "");
-        // Convert date and time from rideData if available
         const journeyOn = rideData.journey_on || "";
         const pickupTime = rideData.pickup_time || "";
         const formattedDate = convertDate(journeyOn);
@@ -241,8 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const estimatedFare = rideData.estimated_price || "";
         const rideJourneyType = rideData.journey_type || "1 way";
         const tamilJourneyType = (rideJourneyType === "2 way") ? "இரு வழி" : "ஒரு வழி";
-
-        // Template 2: For the driver
+        
         let template2 = `*வணக்கம் ${driverName}*\n\n` +
                         `உங்கள் வரவிருக்கும் Cabocab பயணம் உறுதியாக்கப்பட்டுள்ளது!  வாடிக்கையாளர் விவரங்களை கீழே காணலாம்:\n\n` +
                         `*வாடிக்கையாளர் தகவல்:*\n` +
@@ -260,13 +252,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         `- ஒரு வழி / இரு வழி: ${tamilJourneyType}\n\n` +
                         `எந்தவொரு உதவிக்காகவும், தயவுசெய்து எங்களை தொடர்பு கொள்ளவும்:\n` +
                         `📞 9487514688`;
-
-        // Template 3: For the customer
+        
         let template3 = `வணக்கம் ${customerName}\n\n` +
                         `உங்கள் *Cabocab* பயணம் உறுதியாக்கப்பட்டுள்ளது!\n\n` +
                         `பயண விவரங்கள்:\n\n` +
                         `- ஓட்டுநர் பெயர்: ${driverName}\n` +
-                        `- ஓட்டுநர் தொடர்பு எண்: ${driverId}\n` +
+                        `- ஓட்டுநர் தொடர்பு எண்: ${driverNumber}\n` +
                         `- வாகன எண்: ${vehicleNumber}\n` +
                         `- வாகன வகை: ${vehicleType}\n` +
                         `- பிக்கப் இடம்: ${pickup}\n` +
@@ -282,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         `🌐 *வலைத்தளம்:* [cabocab.co.in](http://cabocab.co.in)\n\n` +
                         `*குறிப்பு:* தயவுசெய்து உங்கள் பிக்கப் இடத்தில் 10 நிமிடங்கள் முன்பாக தயாராக இருங்கள்.\n\n` +
                         `✨ *நல்ல பயணம்!* ✨`;
-
+        
         const template2El = document.getElementById('template2');
         const template3El = document.getElementById('template3');
         if (template2El) template2El.value = template2;
